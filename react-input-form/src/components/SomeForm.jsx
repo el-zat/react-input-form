@@ -1,122 +1,108 @@
-import { useEffect, useState,  } from "react";
+import { useState } from "react";
+import useInput from "../hooks/use-input";
 
 
 const SomeForm = (props) => {
-  const [enteredName, setEnteredName] = useState("")
-  const [enteredSurname, setEnteredSurname] = useState("")
-  const [enteredEmail, setEnteredEmail] = useState("")
+  const [isSubmitted, setIsSubmitted] = useState(false)
 
-  // const [isFormValid, setIsFormValid] = useState(false)
+  const {
+    enteredValue: enteredName,
+    isInputInvalid: isNameInputInvalid,
+    inputChangeHandler: inputNameChangeHandler,
+    inputLostFocusHandler: inputNameLostFocusHandler,
+    resetInputValue: resetNameInputValue,   
+    wasInputTouched: wasNameInputTouched,
+  } = useInput(value => value.trim() !== "")
 
-  const [wasNameInputTouched, setWasNameInputTouched] = useState(false)
-  const [wasSurnameInputTouched, setWasSurnameInputTouched] = useState(false)
-  const [wasEmailInputTouched, setWasEmailInputTouched] = useState(false)
+  const {
+    enteredValue: enteredSurname,
+    isInputInvalid: isSurnameInputInvalid,
+    inputChangeHandler: inputSurnameChangeHandler,
+    inputLostFocusHandler: inputSurnameLostFocusHandler,
+    resetInputValue: resetSurnameInputValue,
+    wasInputTouched: wasSurnameInputTouched,
+  } = useInput(value => value.trim() !== "")
 
-  const isEneteredNameValid = (enteredName.trim() !== "")
-  const isEneteredSurnameValid = (enteredSurname.trim() !== "")
-  const isEneteredEmailValid = (enteredEmail.match(/^[^\s@]+@[^\s@]+\.[^\s@]+$/)) 
+  const {
+    enteredValue: enteredEmail,
+    isInputInvalid: isEmailInputInvalid,
+    inputChangeHandler: inputEmailChangeHandler,
+    inputLostFocusHandler: inputEmailLostFocusHandler,
+    resetInputValue: resetEmailInputValue,
+    wasInputTouched: wasEmailInputTouched,
+  } = useInput(value => value.match(/^[^\s@]+@[^\s@]+\.[^\s@]+$/))
 
 
-  // const validEnteredData = [isEneteredNameValid, isEneteredNameValid, isEneteredEmailValid]
-
-  const isNameInputEmpty = !isEneteredNameValid && !wasNameInputTouched
-  const isSurnameInputEmpty = !isEneteredSurnameValid && !wasSurnameInputTouched
-  const isEmailInputEmpty = !isEneteredEmailValid && !wasEmailInputTouched
-
-  const isNameInputInvalid = !isEneteredNameValid && wasNameInputTouched
-  const isSurnameInputInvalid = !isEneteredSurnameValid && wasSurnameInputTouched
-  const isEmailInputInvalid = !isEneteredEmailValid && wasEmailInputTouched
-
-  // const validInputData = [isNameInputInvalid, isSurnameInputInvalid, isEmailInputInvalid]
-
-  const inputClasses = (isEmailInputInvalid) ? 
-                        "form-control invalid" : "form-control"
+  const isFormInvalid = isNameInputInvalid && isSurnameInputInvalid && isEmailInputInvalid
  
-  const isFormInvalid = (isNameInputInvalid && isSurnameInputInvalid && isEmailInputInvalid) 
-                        || isNameInputEmpty || isSurnameInputEmpty || isEmailInputEmpty
- 
-  const inputNameChangeHandler = (event) => {
-    setEnteredName(event.target.value)
-  }
-  const inputSurnameChangeHandler = (event) => {
-    setEnteredSurname(event.target.value)
-  }
-  const inputEmailChangeHandler = (event) => {
-    setEnteredEmail(event.target.value)
-  }
-
 
   const formSubmitHandler = (event) => {
     event.preventDefault()
-    setWasNameInputTouched(true)
-    setWasSurnameInputTouched(true)
-    setWasEmailInputTouched(true)
+    setIsSubmitted(true)
+
     if (isFormInvalid){
       console.log('form is invalid')
       return
     }
-
-    setEnteredName("")
-    setEnteredSurname("")
-    setEnteredEmail("")
-    setWasNameInputTouched(false)
-    setWasSurnameInputTouched(false)
-    setWasEmailInputTouched(false)
-
-    // nameInputRef.current.value=''   not best practice
+    
+    resetNameInputValue()
+    resetSurnameInputValue()
+    resetEmailInputValue()
   }
 
 
-  const nameInputLostFocusHandler = (event) => {
-    setWasNameInputTouched(true)
-  }
-  const surnameInputLostFocusHandler = (event) => {
-    setWasSurnameInputTouched(true)
-  }
-  const emailInputLostFocusHandler = (event) => {
-    setWasEmailInputTouched(true)
-  }
+  const inputNameClasses = (isNameInputInvalid || (isSubmitted && !wasNameInputTouched)) ? 
+                            "form-control invalid" : "form-control"
+  const inputSurnameClasses = (isSurnameInputInvalid || (isSubmitted && !wasSurnameInputTouched)) ? 
+                            "form-control invalid" : "form-control"
+  const inputEmailClasses = (isEmailInputInvalid || (isSubmitted && !wasEmailInputTouched)) ? 
+                            "form-control invalid" : "form-control"
+  
 
 
   return (
     <form onSubmit={formSubmitHandler}>
       <div className="control-group">
-        <div className={inputClasses}>
+        <div className={inputNameClasses}>
           <label htmlFor="name">Enter name</label>
           <input 
                 type="text" 
                 id="name"
-                onChange={inputNameChangeHandler} 
-                onBlur={nameInputLostFocusHandler}
                 value={enteredName} 
+                onChange={inputNameChangeHandler} 
+                onBlur={inputNameLostFocusHandler}               
                 />
           {isNameInputInvalid && <p className="error-text">Enter correct name</p> }
+          
         </div>
-        <div className={inputClasses}>
+        <div className={inputSurnameClasses}>
           <label htmlFor="surname">Enter surname</label>
           <input 
                 type="text" 
                 id="surname"
-                onChange={inputSurnameChangeHandler} 
-                onBlur={surnameInputLostFocusHandler}
                 value={enteredSurname} 
+                onChange={inputSurnameChangeHandler} 
+                onBlur={inputSurnameLostFocusHandler}               
                  />
           {isSurnameInputInvalid && <p className="error-text">Enter correct surname</p> }
+       
         </div>
       </div>
-      <div className={inputClasses}>
+      <div className={inputEmailClasses}>
         <label htmlFor="email">Enter E-Mail</label>
-        <input 
+        <input
             type="text" 
             id="email" 
-            onChange={inputEmailChangeHandler} 
-            onBlur={emailInputLostFocusHandler}
             value={enteredEmail}
+            onChange={inputEmailChangeHandler} 
+            onBlur={inputEmailLostFocusHandler}          
                 />
         {isEmailInputInvalid && <p className="error-text">Enter correct email</p> }
+        {}
       </div>
       <div className="form-actions">
-        <button>Отправить</button>
+        <button onClick={formSubmitHandler}>Send</button>
+        {/* {isFormEmpty && <p>Fill out form</p>} */}
       </div>
     </form>
   );

@@ -27,6 +27,11 @@ body {
   margin-bottom: 1rem;
 }
 
+.untouched  {
+  border: 1px solid #e60808;
+  background-color: #e3caca;
+}
+
 .form-control input,
 .form-control label {
   display: block;
@@ -87,7 +92,7 @@ button:active {
   margin-left: 1rem;
 }
 
-.invalid input {
+.invalid input{
   border: 1px solid #e60808;
   background-color: #e3caca;
 }
