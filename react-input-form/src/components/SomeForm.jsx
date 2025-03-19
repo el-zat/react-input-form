@@ -6,7 +6,7 @@ const SomeForm = (props) => {
   const [isFormSubmitted, setIsFormSubmitted] = useState(false)
 
   const {
-    enteredValue: enteredName,
+    value: enteredName,
     isInputInvalid: isNameInputInvalid,
     inputChangeHandler: inputNameChangeHandler,
     inputLostFocusHandler: inputNameLostFocusHandler,
@@ -15,7 +15,7 @@ const SomeForm = (props) => {
   } = useInput(value => value.trim() !== "")
 
   const {
-    enteredValue: enteredSurname,
+    value: enteredSurname,
     isInputInvalid: isSurnameInputInvalid,
     inputChangeHandler: inputSurnameChangeHandler,
     inputLostFocusHandler: inputSurnameLostFocusHandler,
@@ -24,7 +24,7 @@ const SomeForm = (props) => {
   } = useInput(value => value.trim() !== "")
 
   const {
-    enteredValue: enteredEmail,
+    value: enteredEmail,
     isInputInvalid: isEmailInputInvalid,
     inputChangeHandler: inputEmailChangeHandler,
     inputLostFocusHandler: inputEmailLostFocusHandler,
@@ -103,7 +103,6 @@ const SomeForm = (props) => {
       </div>
       <div className="form-actions">
         <button onClick={formSubmitHandler}>Send</button>
-        {/* {isFormEmpty && <p>Fill out form</p>} */}
       </div>
     </form>
   );
