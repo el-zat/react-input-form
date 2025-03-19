@@ -3,7 +3,7 @@ import useInput from "../hooks/use-input";
 
 
 const SomeForm = (props) => {
-  const [isSubmitted, setIsSubmitted] = useState(false)
+  const [isFormSubmitted, setIsFormSubmitted] = useState(false)
 
   const {
     enteredValue: enteredName,
@@ -37,8 +37,9 @@ const SomeForm = (props) => {
  
 
   const formSubmitHandler = (event) => {
+    console.log('is submitted')
     event.preventDefault()
-    setIsSubmitted(true)
+    setIsFormSubmitted(true)
 
     if (isFormInvalid){
       console.log('form is invalid')
@@ -50,15 +51,15 @@ const SomeForm = (props) => {
     resetEmailInputValue()
   }
 
+  const getInputClasses = (isInputInvalid, isFormSubmitted, wasInputTouched) => {
+    return (isInputInvalid || (isFormSubmitted && !wasInputTouched)) ?
+           "form-control invalid" : "form-control"
+  }
 
-  const inputNameClasses = (isNameInputInvalid || (isSubmitted && !wasNameInputTouched)) ? 
-                            "form-control invalid" : "form-control"
-  const inputSurnameClasses = (isSurnameInputInvalid || (isSubmitted && !wasSurnameInputTouched)) ? 
-                            "form-control invalid" : "form-control"
-  const inputEmailClasses = (isEmailInputInvalid || (isSubmitted && !wasEmailInputTouched)) ? 
-                            "form-control invalid" : "form-control"
-  
-
+  const inputNameClasses = getInputClasses(isNameInputInvalid, isFormSubmitted, wasNameInputTouched)
+  const inputSurnameClasses = getInputClasses(isSurnameInputInvalid, isFormSubmitted, wasSurnameInputTouched)
+  const inputEmailClasses = getInputClasses(isEmailInputInvalid, isFormSubmitted, wasEmailInputTouched)
+                 
 
   return (
     <form onSubmit={formSubmitHandler}>
